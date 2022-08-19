@@ -1,7 +1,4 @@
 # Pyspark
-Pyspark
-
-
 # Import Enviroments
 
 import os
@@ -789,5 +786,66 @@ only showing top 2 rows
 |           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|2008-04-01 00:00:00|
 +------------+-----------+--------------------+-------------------+-------------------+
 only showing top 2 rows
+
+### Joins Dataframes ###
+#Using Distinct #
+
+df.select(col('GroupName')).distinct().show(truncate=False)
++------------------------------------+
+|GroupName                           |
++------------------------------------+
+|Executive General and Administration|
+|Sales and Marketing                 |
+|Research and Development            |
+|Quality Assurance                   |
+|Manufacturing                       |
+|Inventory Management                |
++------------------------------------+
+
+# Using Collect - show all the rows#
+
+df.select(col('GroupName')).distinct().collect()
+[Row(GroupName='Executive General and Administration'),
+ Row(GroupName='Sales and Marketing'),
+ Row(GroupName='Research and Development'),
+ Row(GroupName='Quality Assurance'),
+ Row(GroupName='Manufacturing'),
+ Row(GroupName='Inventory Management')]
+list = df.select(col('GroupName')).collect()
+type(list[0][0])
+str
+list[5][0]
+'Research and Development'
+list[0][0]
+'Research and Development'
+# Generating a list GroupName = []
+
+for GroupName in list:
+    GroupName.asDict(GroupName[0])
+GroupName
+Row(GroupName='Executive General and Administration')
+## Working with When () / Otherwise()##
+
+df.withColumn('NewColumn', when(col('GroupName') == "Manufacturing", "C0rrect" )).distinct().show(truncate=False)
++------------+--------------------------+------------------------------------+-------------------+---------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |NewColumn|
++------------+--------------------------+------------------------------------+-------------------+---------+
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|null     |
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|C0rrect  |
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|null     |
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|null     |
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|C0rrect  |
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|null     |
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|null     |
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|null     |
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|null     |
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|null     |
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|null     |
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|null     |
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|null     |
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|null     |
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|null     |
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|null     |
++------------+--------------------------+------------------------------------+-------------------+---------+
 
  
