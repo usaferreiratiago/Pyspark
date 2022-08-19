@@ -1,6 +1,7 @@
 # Pyspark
 Pyspark
 
+
 # Import Enviroments
 
 import os
@@ -711,6 +712,82 @@ only showing top 2 rows
 |           1|Engineering|Research and Deve...|2008-04-30 00:00:00|     0|
 |           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|     0|
 +------------+-----------+--------------------+-------------------+------+
+only showing top 2 rows
+
+#Days and Month in Words
+
+df.withColumn("dayofweek" ,dayofweek("ModifiedDate")).show(2)
+df.withColumn("dayinwords",date_format("ModifiedDate" , "EEEE")).show(2)
+df.withColumn("monthinwords", date_format("ModifiedDate" , "LLLL")).show(2)
++------------+-----------+--------------------+-------------------+---------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|dayofweek|
++------------+-----------+--------------------+-------------------+---------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|        4|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|        4|
++------------+-----------+--------------------+-------------------+---------+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+----------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|dayinwords|
++------------+-----------+--------------------+-------------------+----------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00| Wednesday|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00| Wednesday|
++------------+-----------+--------------------+-------------------+----------+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+------------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|monthinwords|
++------------+-----------+--------------------+-------------------+------------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|       April|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|       April|
++------------+-----------+--------------------+-------------------+------------+
+only showing top 2 rows
+
+#Hadling Dates
+
+df.withColumn("cur_date",current_date()).show(2)
+df.withColumn("Days",datediff(current_date(),"ModifiedDate" )).show(2) 
+df.withColumn("dateadd" ,date_add("ModifiedDate",5)).show(2) 
+df.withColumn("datesub" ,date_sub("ModifiedDate",5)).show(2) 
+df.withColumn("datetrnc",date_trunc('mm' , "ModifiedDate")).show(2) 
++------------+-----------+--------------------+-------------------+----------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|  cur_date|
++------------+-----------+--------------------+-------------------+----------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|2022-08-19|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|2022-08-19|
++------------+-----------+--------------------+-------------------+----------+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+----+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|Days|
++------------+-----------+--------------------+-------------------+----+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|5224|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|5224|
++------------+-----------+--------------------+-------------------+----+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+----------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|   dateadd|
++------------+-----------+--------------------+-------------------+----------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|2008-05-05|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|2008-05-05|
++------------+-----------+--------------------+-------------------+----------+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+----------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|   datesub|
++------------+-----------+--------------------+-------------------+----------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|2008-04-25|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|2008-04-25|
++------------+-----------+--------------------+-------------------+----------+
+only showing top 2 rows
+
++------------+-----------+--------------------+-------------------+-------------------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|           datetrnc|
++------------+-----------+--------------------+-------------------+-------------------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|2008-04-01 00:00:00|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|2008-04-01 00:00:00|
++------------+-----------+--------------------+-------------------+-------------------+
 only showing top 2 rows
 
  
