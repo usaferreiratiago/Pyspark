@@ -826,26 +826,305 @@ GroupName
 Row(GroupName='Executive General and Administration')
 ## Working with When () / Otherwise()##
 
-df.withColumn('NewColumn', when(col('GroupName') == "Manufacturing", "C0rrect" )).distinct().show(truncate=False)
-+------------+--------------------------+------------------------------------+-------------------+---------+
-|DepartmentID|Name                      |GroupName                           |ModifiedDate       |NewColumn|
-+------------+--------------------------+------------------------------------+-------------------+---------+
-|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|null     |
-|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|C0rrect  |
-|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|null     |
-|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|null     |
-|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|C0rrect  |
-|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|null     |
-|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|null     |
-|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|null     |
-|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|null     |
-|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|null     |
-|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|null     |
-|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|null     |
-|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|null     |
-|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|null     |
-|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|null     |
-|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|null     |
-+------------+--------------------------+------------------------------------+-------------------+---------+
+##df.withColumn('Correct', when(col('GroupName') == "Manufacturing", lit("OK"))).otherwise("NOT")
 
- 
+df.withColumn("Correct", when(col("GroupName") == "Manufacturing" , lit("OK")).otherwise("")).distinct().show(truncate=False)
++------------+--------------------------+------------------------------------+-------------------+-------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |Correct|
++------------+--------------------------+------------------------------------+-------------------+-------+
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|OK     |
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|       |
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|       |
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|OK     |
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|       |
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|       |
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|       |
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|       |
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|       |
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|       |
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|       |
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|       |
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|       |
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|       |
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|       |
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|       |
++------------+--------------------------+------------------------------------+-------------------+-------+
+
+## Working with When () / Otherwise()##
+
+##df.withColumn('Correct', when(col('GroupName') == "Manufacturing", lit("OK"))).otherwise("NOT")
+
+df.withColumn("Correct", when(col("GroupName").isin("GroupName"),'Correct')
+             
+
+.otherwise("Ok")).distinct().show(truncate=False)
++------------+--------------------------+------------------------------------+-------------------+-------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |Correct|
++------------+--------------------------+------------------------------------+-------------------+-------+
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|Ok     |
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|Ok     |
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|Ok     |
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|Ok     |
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|Ok     |
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|Ok     |
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|Ok     |
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|Ok     |
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|Ok     |
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|Ok     |
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|Ok     |
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|Ok     |
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|Ok     |
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|Ok     |
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|Ok     |
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|Ok     |
++------------+--------------------------+------------------------------------+-------------------+-------+
+
+## Working with OrderBy desc
+
+df.orderBy(col("GroupName").desc()).show(truncate=False)
++------------+--------------------------+------------------------------------+-------------------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |
++------------+--------------------------+------------------------------------+-------------------+
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|
++------------+--------------------------+------------------------------------+-------------------+
+
+## Working with OrderBy asc
+
+df.orderBy(col("GroupName").asc()).show(truncate=False)
++------------+--------------------------+------------------------------------+-------------------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |
++------------+--------------------------+------------------------------------+-------------------+
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|
++------------+--------------------------+------------------------------------+-------------------+
+
+## Working with OrderBy, Distinct asc
+
+df.orderBy(col("GroupName").asc()).distinct().show(truncate=False)
+           
++------------+--------------------------+------------------------------------+-------------------+
+|DepartmentID|Name                      |GroupName                           |ModifiedDate       |
++------------+--------------------------+------------------------------------+-------------------+
+|5           |Purchasing                |Inventory Management                |2008-04-30 00:00:00|
+|7           |Production                |Manufacturing                       |2008-04-30 00:00:00|
+|15          |Shipping and Receiving    |Inventory Management                |2008-04-30 00:00:00|
+|3           |Sales                     |Sales and Marketing                 |2008-04-30 00:00:00|
+|6           |Research and Development  |Research and Development            |2008-04-30 00:00:00|
+|9           |Human Resources           |Executive General and Administration|2008-04-30 00:00:00|
+|16          |Executive                 |Executive General and Administration|2008-04-30 00:00:00|
+|1           |Engineering               |Research and Development            |2008-04-30 00:00:00|
+|13          |Quality Assurance         |Quality Assurance                   |2008-04-30 00:00:00|
+|14          |Facilities and Maintenance|Executive General and Administration|2008-04-30 00:00:00|
+|12          |Document Control          |Quality Assurance                   |2008-04-30 00:00:00|
+|4           |Marketing                 |Sales and Marketing                 |2008-04-30 00:00:00|
+|2           |Tool Design               |Research and Development            |2008-04-30 00:00:00|
+|8           |Production Control        |Manufacturing                       |2008-04-30 00:00:00|
+|11          |Information Services      |Executive General and Administration|2008-04-30 00:00:00|
+|10          |Finance                   |Executive General and Administration|2008-04-30 00:00:00|
++------------+--------------------------+------------------------------------+-------------------+
+
+## Working with GroupBy, Count, Distinct and asc
+
+df.groupBy("GroupName").count().distinct().show(truncate=False)
++------------------------------------+-----+
+|GroupName                           |count|
++------------------------------------+-----+
+|Executive General and Administration|5    |
+|Sales and Marketing                 |2    |
+|Research and Development            |3    |
+|Quality Assurance                   |2    |
+|Manufacturing                       |2    |
+|Inventory Management                |2    |
++------------------------------------+-----+
+
+## Union and Union All
+## Joins
+df2 = spark.read.csv('C:/Users/IEUser/Documents/Delta Lake/Bronze/HumanResources.Employee.csv',header=True, inferSchema=True)
+df2.show(1)
++----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+|BusinessEntityID|NationalIDNumber|             LoginID|OrganizationNode|OrganizationLevel|            JobTitle|          BirthDate|MaritalStatus|Gender|           HireDate|SalariedFlag|VacationHours|SickLeaveHours|CurrentFlag|             rowguid|       ModifiedDate|
++----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+|               1|       295847284|adventure-works\ken0|            NULL|             NULL|Chief Executive O...|1969-01-29 00:00:00|            S|     M|2009-01-14 00:00:00|           1|           99|            69|          1|F01251E5-96A3-448...|2014-06-30 00:00:00|
++----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+only showing top 1 row
+
+df2.printSchema()
+root
+ |-- BusinessEntityID: integer (nullable = true)
+ |-- NationalIDNumber: integer (nullable = true)
+ |-- LoginID: string (nullable = true)
+ |-- OrganizationNode: string (nullable = true)
+ |-- OrganizationLevel: string (nullable = true)
+ |-- JobTitle: string (nullable = true)
+ |-- BirthDate: timestamp (nullable = true)
+ |-- MaritalStatus: string (nullable = true)
+ |-- Gender: string (nullable = true)
+ |-- HireDate: timestamp (nullable = true)
+ |-- SalariedFlag: integer (nullable = true)
+ |-- VacationHours: integer (nullable = true)
+ |-- SickLeaveHours: integer (nullable = true)
+ |-- CurrentFlag: integer (nullable = true)
+ |-- rowguid: string (nullable = true)
+ |-- ModifiedDate: timestamp (nullable = true)
+
+# Searching for Nulls
+
+for column in df2.columns:
+    print(column,df2.filter(df2[column].isNull()).count())
+    
+BusinessEntityID 0
+NationalIDNumber 0
+LoginID 0
+OrganizationNode 0
+OrganizationLevel 0
+JobTitle 0
+BirthDate 0
+MaritalStatus 0
+Gender 0
+HireDate 0
+SalariedFlag 0
+VacationHours 0
+SickLeaveHours 0
+CurrentFlag 0
+rowguid 0
+ModifiedDate 0
+# Check all Columns
+
+df2.columns
+['BusinessEntityID',
+ 'NationalIDNumber',
+ 'LoginID',
+ 'OrganizationNode',
+ 'OrganizationLevel',
+ 'JobTitle',
+ 'BirthDate',
+ 'MaritalStatus',
+ 'Gender',
+ 'HireDate',
+ 'SalariedFlag',
+ 'VacationHours',
+ 'SickLeaveHours',
+ 'CurrentFlag',
+ 'rowguid',
+ 'ModifiedDate']
+# using Split - only to know about it, if see on another code
+# Always you need to put ## [ df = ]## to Save
+
+df2.select('BusinessEntityID LoginID OrganizationNode OrganizationLevel JobTitle '.split()).show(truncate=False)
++----------------+------------------------+----------------+-----------------+---------------------------------+
+|BusinessEntityID|LoginID                 |OrganizationNode|OrganizationLevel|JobTitle                         |
++----------------+------------------------+----------------+-----------------+---------------------------------+
+|1               |adventure-works\ken0    |NULL            |NULL             |Chief Executive Officer          |
+|2               |adventure-works\terri0  |0x58            |1                |Vice President of Engineering    |
+|3               |adventure-works\roberto0|0x5AC0          |2                |Engineering Manager              |
+|4               |adventure-works\rob0    |0x5AD6          |3                |Senior Tool Designer             |
+|5               |adventure-works\gail0   |0x5ADA          |3                |Design Engineer                  |
+|6               |adventure-works\jossef0 |0x5ADE          |3                |Design Engineer                  |
+|7               |adventure-works\dylan0  |0x5AE1          |3                |Research and Development Manager |
+|8               |adventure-works\diane1  |0x5AE158        |4                |Research and Development Engineer|
+|9               |adventure-works\gigi0   |0x5AE168        |4                |Research and Development Engineer|
+|10              |adventure-works\michael6|0x5AE178        |4                |Research and Development Manager |
+|11              |adventure-works\ovidiu0 |0x5AE3          |3                |Senior Tool Designer             |
+|12              |adventure-works\thierry0|0x5AE358        |4                |Tool Designer                    |
+|13              |adventure-works\janice0 |0x5AE368        |4                |Tool Designer                    |
+|14              |adventure-works\michael8|0x5AE5          |3                |Senior Design Engineer           |
+|15              |adventure-works\sharon0 |0x5AE7          |3                |Design Engineer                  |
+|16              |adventure-works\david0  |0x68            |1                |Marketing Manager                |
+|17              |adventure-works\kevin0  |0x6AC0          |2                |Marketing Assistant              |
+|18              |adventure-works\john5   |0x6B40          |2                |Marketing Specialist             |
+|19              |adventure-works\mary2   |0x6BC0          |2                |Marketing Assistant              |
+|20              |adventure-works\wanida0 |0x6C20          |2                |Marketing Assistant              |
++----------------+------------------------+----------------+-----------------+---------------------------------+
+only showing top 20 rows
+
+#empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner") \
+     #.show(truncate=False)
+
+
+#(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner")
+
+dfnovo = df.join(df2,df.DepartmentID ==  df2.BusinessEntityID,"leftouter")
+dfnovo.show(2)
++------------+-----------+--------------------+-------------------+----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+|DepartmentID|       Name|           GroupName|       ModifiedDate|BusinessEntityID|NationalIDNumber|             LoginID|OrganizationNode|OrganizationLevel|            JobTitle|          BirthDate|MaritalStatus|Gender|           HireDate|SalariedFlag|VacationHours|SickLeaveHours|CurrentFlag|             rowguid|       ModifiedDate|
++------------+-----------+--------------------+-------------------+----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+|           1|Engineering|Research and Deve...|2008-04-30 00:00:00|               1|       295847284|adventure-works\ken0|            NULL|             NULL|Chief Executive O...|1969-01-29 00:00:00|            S|     M|2009-01-14 00:00:00|           1|           99|            69|          1|F01251E5-96A3-448...|2014-06-30 00:00:00|
+|           2|Tool Design|Research and Deve...|2008-04-30 00:00:00|               2|       245797967|adventure-works\t...|            0x58|                1|Vice President of...|1971-08-01 00:00:00|            S|     F|2008-01-31 00:00:00|           1|            1|            20|          1|45E8F437-670D-440...|2014-06-30 00:00:00|
++------------+-----------+--------------------+-------------------+----------------+----------------+--------------------+----------------+-----------------+--------------------+-------------------+-------------+------+-------------------+------------+-------------+--------------+-----------+--------------------+-------------------+
+only showing top 2 rows
+
+#empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner") \
+     #.show(truncate=False)
+
+
+#(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner")
+
+dfHR = df.join(df2,df.DepartmentID ==  df2.BusinessEntityID,"leftouter")\
+.select(col("JobTitle"))
+dfHR.show(truncate=False)
++---------------------------------+
+|JobTitle                         |
++---------------------------------+
+|Chief Executive Officer          |
+|Vice President of Engineering    |
+|Engineering Manager              |
+|Senior Tool Designer             |
+|Design Engineer                  |
+|Design Engineer                  |
+|Research and Development Manager |
+|Research and Development Engineer|
+|Research and Development Engineer|
+|Research and Development Manager |
+|Senior Tool Designer             |
+|Tool Designer                    |
+|Tool Designer                    |
+|Senior Design Engineer           |
+|Design Engineer                  |
+|Marketing Manager                |
++---------------------------------+
+
+empDF.alias("emp1").join(empDF.alias("emp2"), \
+                         
+                         
+    col("emp1.superior_emp_id") == col("emp2.emp_id"),"inner") \
+
+
+    .select(col("emp1.emp_id"),col("emp1.name"), \
+            
+            
+      col("emp2.emp_id").alias("superior_emp_id"), \
+            
+            
+      col("emp2.name").alias("superior_emp_name")) \
+
+
+   .show(truncate=False)
