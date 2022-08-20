@@ -388,10 +388,12 @@ df2 = spark.read.format(file_type) \
 df2.show(truncate=False)
 df2.select(col("LoginID"))
 df2.show(truncate=False)
-df2.write.mode("append").csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
+#df2.write.csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
+df2.write.csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
+#df2.write.mode("overwrite").csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
 #df2.write.mode("overwrite").csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
 
 # C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv
 
-df2.select(col("LoginID"))
+df2.select(col("LoginID")).show(truncate=False)
 
