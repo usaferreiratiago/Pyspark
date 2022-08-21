@@ -1,5 +1,5 @@
 # Pyspark
-## Import Enviroments
+# Import Enviroments
 
 import os
 import sys
@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 # Import Libraries 
 
 from pyspark.sql import SparkSession
+from pyspark.sql import *
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
@@ -361,39 +362,30 @@ dfHR.show(truncate=False)
 
 df2.columns
 
-df2.select(col("LoginID")).show(truncate=False)
+# SQL inside Pyspark
 
-# The applied options are for CSV files. For other file types, these will be ignored.
+df2 = spark.sql("""SELECT
+
+ 
+ SUBSTRING(LoginID, 17, 100) AS Login, 
+ SUBSTRING(HireDate, 1, 10) AS HireDate,
+ JobTitle,
+ SUBSTRING(BirthDate, 1, 10) AS BirthDate,
+ CASE
+    WHEN MaritalStatus = 'S' THEN 'Single'
+    WHEN MaritalStatus = 'M' THEN 'Married'
+    ELSE ''
+END AS MaritalStatus,
+CASE
+    WHEN Gender = 'M' THEN 'Male'
+    WHEN Gender = 'F' THEN 'Female'
+    ELSE ''
+END AS Gender
+FROM HumanResources_Employee
+
+where JobTitle in ('Senior Tool Designer','Tool Designer') 
 
 
-# File location and type
-file_location = "C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Employee.csv"
-file_type = "csv"
 
-
-# CSV options
-infer_schema = "true"
-first_row_is_header = "true"
-delimiter = ","
-
-
-
-
-
-df2 = spark.read.format(file_type) \
-.option("inferSchema", infer_schema) \
-.option("header", first_row_is_header) \
-.option("sep" , delimiter) \
-.load(file_location)
-df2.show(truncate=False)
-df2.select(col("LoginID"))
-df2.show(truncate=False)
-#df2.write.csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
-df2.write.csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
-#df2.write.mode("overwrite").csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
-#df2.write.mode("overwrite").csv("C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv")
-
-# C:/Users/IEUser/Documents/DeltaLake/Silver/Teste/HumanResources.Employee.csv
-
-df2.select(col("LoginID")).show(truncate=False)
+""").show(truncate= False)
 
