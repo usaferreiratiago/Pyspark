@@ -6,6 +6,8 @@ import sys
 
 os.environ['PYSPARK_PYTHON'] = sys.executable
 os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
+os.environ['PYSPARK_DRIVER_PYTHON_OPTS']= "notebook"
+
 
 
 # Important to be installed
@@ -29,6 +31,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql import *
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+
 
 # Create SparkSession
 
@@ -258,6 +261,25 @@ df.withColumn("datetrnc",date_trunc('mm' , "ModifiedDate")).show(2)
 
 ### Joins Dataframes ###
 
+
+df.join(df2, df.DepartmentID == df2.BusinessEntityID, "inner")\
+.select(df2.BusinessEntityID.alias("Entity"), \
+df.DepartmentID.alias('Department'), \
+df.Name.alias('Name')).show(4)
+
+
+###############################################################################################
+
+
+#Emp.join(EmpProm, Emp.EID == EmpProm.EID, "inner").select(Emp. EID, Emp.name, Emp.YOJ,Emp.salary, EmpProm.PromYear, EmpProm.Previous Desig, EmpProm.Curren
+#tDesig).show()
+
+
+#Emp.alias("E1") .join(Emp.alias("E2"), col("E1.mangerId")== col("E2.EID") , "inner") \
+#.select(col("E1.EID"), col("El.name") ,
+#col("E2.EID").alias("Manager ID"), col("E2.name").alias("ManagerName")).show()
+
+
 #Using Distinct #
 
 df.select(col('GroupName')).distinct().show(truncate=False)
@@ -316,8 +338,6 @@ df.groupBy("GroupName").count().distinct().show(truncate=False)
 
 ## Union and Union All
 
-## Joins
-
 df2 = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Employee.csv',header=True, inferSchema=True)
 df2.show(1)
 
@@ -329,6 +349,8 @@ for column in df2.columns:
     print(column,df2.filter(df2[column].isNull()).count())
     
 
+df.columns
+
 # Check all Columns
 
 df2.columns
@@ -337,17 +359,6 @@ df2.columns
 # Always you need to put ## [ df = ]## to Save
 
 df2.select('BusinessEntityID LoginID OrganizationNode OrganizationLevel JobTitle '.split()).show(truncate=False)
-
-
-#empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner") \
-     #.show(truncate=False)
-
-
-#(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner")
-
-dfnovo = df.join(df2,df.DepartmentID ==  df2.BusinessEntityID,"leftouter")
-dfnovo.show(2)
-
 
 
 #empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner") \
@@ -388,4 +399,22 @@ where JobTitle in ('Senior Tool Designer','Tool Designer')
 
 
 """).show(truncate= False)
+
+
+
+df = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Department.csv',header=True, inferSchema=True)
+df.show(1)
+
+df2 = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Employee.csv',header=True, inferSchema=True)
+df2.show(1)
+
+
+
+
+
+df = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Department.csv',header=True, inferSchema=True)
+df.show(truncate=False)
+
+df.groupBy("GroupName").count().distinct().show()
+#println("FilterData");
 
