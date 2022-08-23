@@ -12,18 +12,21 @@ os.environ['PYSPARK_DRIVER_PYTHON_OPTS']= "notebook"
 
 # Important to be installed
 
-pip install nbconvert
-pip install seaborn
-pip install pyppeteer
-pip install pyspark
-pip install findspark 
-pip pyppeteer-install
+#pip install nbconvert
+#pip install seaborn
+#pip install pyppeteer
+#pip install pyspark
+#pip install findspark 
+#pip pyppeteer-install
 
 
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import findspark
+
+findspark.find()
 
 # Import Libraries 
 
@@ -35,12 +38,20 @@ from pyspark.sql.types import *
 
 # Create SparkSession
 
-spark = (
-    SparkSession.builder
-    .master('local')
-    .appName('Project_01')
-    .getOrCreate()
-)
+#spark = (
+    #SparkSession.builder
+    #.master('local[12]')
+    #.appName('Project_01')
+    #.getOrCreate()
+#)
+#spark.conf.set('mapreduce.fileoutputcommitter.marksuccessfulljobs', 'false')
+
+spark = SparkSession \
+.builder \
+.appName("Project_01") \
+.config('spark.ui.showConsoleProgress', 'true') \
+.config("spark.master", "local[12]") \
+.getOrCreate()
 
 # Read File Received
 # Always you need to put ## [ df = ]## to Save
@@ -360,17 +371,6 @@ df2.columns
 
 df2.select('BusinessEntityID LoginID OrganizationNode OrganizationLevel JobTitle '.split()).show(truncate=False)
 
-
-#empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner") \
-     #.show(truncate=False)
-
-
-#(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"inner")
-
-dfHR = df.join(df2,df.DepartmentID ==  df2.BusinessEntityID,"leftouter")\
-.select(col("JobTitle"))
-dfHR.show(truncate=False)
-
 df2.columns
 
 # SQL inside Pyspark
@@ -400,21 +400,49 @@ where JobTitle in ('Senior Tool Designer','Tool Designer')
 
 """).show(truncate= False)
 
+# Trying making new queries
 
-
-df = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Department.csv',header=True, inferSchema=True)
+df = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Department.csv'\
+                    ,header=True, inferSchema=True).select(col("DepartmentID").alias("Id"))
 df.show(1)
 
-df2 = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Employee.csv',header=True, inferSchema=True)
+df2 = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Employee.csv',\
+                     header=True, inferSchema=True).select(col("JobTitle").alias("Job"))
 df2.show(1)
-
-
-
-
 
 df = spark.read.csv('C:/Users/IEUser/Documents/DeltaLake/Bronze/HumanResources.Department.csv',header=True, inferSchema=True)
 df.show(truncate=False)
 
 df.groupBy("GroupName").count().distinct().show()
 #println("FilterData");
+
+import findspark
+findspark.init()
+
+## Testing export csv
+
+#df.coalesce(1).write.csv('C:/Users/IEUser/Documents/DeltaLake/Silver/Teste',
+#mode='overwrite')
+
+## Testing export csv
+
+
+#df.coalesce(1).write.csv('csv/',
+#mode='overwrite',
+#compression='gzip'
+#sep=';'>
+#encoding='UTF-8',
+#quote-***
+#quoteALL-True,
+#escape='\\'
+#escapeQuotes= False,
+#header = True,
+#ignoreLeadingwhiteSpace True,
+#ignore TrailingwhiteSpace = True,
+#nullValue -"NULL VALUE",
+#dateFormat -'dd-MM-yyyy",
+# timestampFormat = 'dd-MM-yyyy",
+#empty value='empty value"
+#lineSep='\n'
+#)
 
